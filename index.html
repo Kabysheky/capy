@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clara's Real Audition - Rio 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700&family=Bowlby+One+SC&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: radial-gradient(circle, #2d6a4f 0%, #081c15 100%);
+            font-family: 'Quicksand', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 50px;
+            border-radius: 40px;
+            border: 4px solid #74c69d;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        /* Speech Bubble */
+        .bubble {
+            position: absolute;
+            background: white;
+            color: black;
+            padding: 15px 25px;
+            border-radius: 20px;
+            bottom: 85%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: bold;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        #capy-svg {
+            width: 200px;
+            transition: transform 0.3s;
+        }
+
+        .opera-mode {
+            animation: shake 0.1s infinite;
+            filter: drop-shadow(0 0 10px gold);
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            50% { transform: translate(-1px, -2px) rotate(-1deg); }
+            100% { transform: translate(1px, 2px) rotate(1deg); }
+        }
+
+        .btn {
+            background: #d90429;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-family: 'Bowlby One SC', cursive;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 30px;
+            box-shadow: 0 5px 0 #8d021f;
+        }
+
+        .btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #8d021f;
+        }
+
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="bubble" class="bubble"></div>
+        <svg id="capy-svg" viewBox="0 0 200 150">
+            <rect x="50" y="110" width="20" height="30" fill="#8d6e63" />
+            <rect x="130" y="110" width="20" height="30" fill="#8d6e63" />
+            <ellipse cx="100" cy="80" rx="70" ry="50" fill="#a1887f" />
+            <ellipse cx="150" cy="60" rx="35" ry="30" fill="#a1887f" />
+            <rect x="170" y="55" width="15" height="15" rx="5" fill="#5d4037" />
+            <circle cx="155" cy="50" r="4" fill="black" />
+            <circle cx="130" cy="40" r="8" fill="#8d6e63" />
+        </svg>
+
+        <br>
+        <button id="btn" class="btn" onclick="startAudition()">AUDITION CLARA</button>
+    </div>
+
+    <script>
+        const capy = document.getElementById('capy-svg');
+        const bubble = document.getElementById('bubble');
+        const btn = document.getElementById('btn');
+
+        function say(text, pitch, rate, onEnd) {
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.pitch = pitch;
+            msg.rate = rate;
+            msg.onstart = () => {
+                bubble.innerText = text;
+                bubble.style.display = 'block';
+            };
+            msg.onend = onEnd;
+            window.speechSynthesis.speak(msg);
+        }
+
+        function startAudition() {
+            btn.disabled = true;
+
+            // 1. The High Pitched Intro
+            say("Hi! I am Clara, the capybara", 2.0, 1.0, () => {
+                say("And I'm going to sing a song!", 2.0, 1.0, () => {
+                    
+                    // 2. The Opera Surprise (Low Pitch, Slow, Heavy)
+                    setTimeout(() => {
+                        capy.classList.add('opera-mode');
+                        say("MEMEMEMEME MEEEEEE!", 0.5, 0.6, () => {
+                            
+                            // 3. The "Next!" Cutoff
+                            capy.classList.remove('opera-mode');
+                            say("NEXT!", 1.2, 1.5, () => {
+                                bubble.style.display = 'none';
+                                btn.disabled = false;
+                            });
+                        });
+                    }, 500);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
